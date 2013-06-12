@@ -1,0 +1,4 @@
+az
+==
+
+an esolang!
