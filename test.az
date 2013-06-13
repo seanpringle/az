@@ -7,11 +7,14 @@ a"variable substitution: ". b42 c"world" a{ "hello $C #B". }; 10.
 a"shell integration: ".10. "ls" $,[.,]
 a"character indexing: ". c"abc" a256/ b255& . 10.
 
-( FizzBuzz )
 ( a100 [ b101 ac: bc- cd3%! ce5%! d[f"Fizz".0] e[f"Buzz".0] de|![c#0] 10. ab1-a: ] )
 
-( Function Call )
 a"function call: ".
 a{ "hello ".B. 10. } b"tom" a; b"dick" a; b"harry" a;
+
+a"fibonacci sequence: ". a0 b1 [ ab #c32.: ac+ ba: cb: d100c<d=! ] 10.
+
+a"factorial 5: ". a1 b5 [ ba* bc1-b: ] a# 10.
+a"factorial 5: ". a1 b5 [ ba* c0!b+ ] a# 10.
 
 0
