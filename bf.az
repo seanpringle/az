@@ -2,7 +2,7 @@
 a32768@
 
 ( read source to cell 26 )
-a26 [ b,? ba@: c1a+ ]
+a26 [ b,? a@: c1a+ ]
 
 ( tape pointer )
 a16384
