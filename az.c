@@ -31,7 +31,7 @@ interpret(char *source, cell *outer)
 	assert((inner = calloc(26, sizeof(cell))));
 	current = inner, previous = inner;
 
-	FILE *input = stdin; int depth = 0, done = 0, mem = 26 * sizeof(cell);
+	FILE *input = stdin; int depth = 0, done = 0, mem = 26;
 	char *base = source, *buffer, *from, *branches[4];
 
 	while (!done && source && *source)
@@ -53,20 +53,22 @@ interpret(char *source, cell *outer)
 				break;
 
 			case '[':
-				if (*current)
+				assert(depth < 4);
+				branches[depth++] = source;
+				break;
+
+			case '?':
+				assert(depth > 0);
+				if (!*current)
 				{
-					assert(depth < 4);
-					branches[depth++] = source;
-					break;
+					source = scan(source, '[', ']');
+					depth--;
 				}
-				source = scan(source, '[', ']');
 				break;
 
 			case ']':
 				assert(depth > 0);
-				depth--;
-				if (*current)
-					source = branches[depth++];
+				source = branches[depth-1];
 				break;
 
 			case '"':
@@ -116,19 +118,21 @@ interpret(char *source, cell *outer)
 				buffer = (char*)current;
 				while (buffer && *buffer)
 					fputc(*buffer++, stdout);
+				fflush(stdout);
 				break;
 
 			case '@':
-				assert(*current);
+				assert(*current > 0);
 				if (*current > mem)
 				{
+					assert((inner = realloc(inner, *current * sizeof(cell))));
+					memset(inner + mem, 0, (*current - mem) * sizeof(cell));
 					mem = *current;
-					assert((inner = realloc(inner, mem)));
 				}
 				current = &inner[*current];
 				break;
 
-			case '#': printf(FORMAT, *current);                   break;
+			case '#': printf(FORMAT, *current);                  break;
 			case ';': interpret(base + *current, inner);         break;
 			case ':': *current = *previous;                      break;
 			case '+': *current += *previous;                     break;

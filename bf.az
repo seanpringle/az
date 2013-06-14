@@ -1,0 +1,24 @@
+a32768@ ( 64k source, 64k tape )
+
+( read source to cell 26 )
+a26 [ b,? ba@: c1a+ ]
+
+a16384 ( tape pointer    )
+b26    ( source pointer  )
+z0     ( handy! )
+
+b@c:
+[?
+	(>) c d62 = [? 1a+   z]
+	(<) c d60 = [? 0!a+  z]
+	(+) c d43 = [? 1a@+  z]
+	(-) c d45 = [? 0!a@+ z]
+	(.) c d46 = [? a@.   z]
+	(,) c d44 = [? a@,   z]
+	([) c d91 = [? f1 a@d:! [? e1  b+@e: ed91= [? g1f+ z] ed93= [? g0!f+ z] f ]]
+	(]) c d93 = [? f1 a@d:  [? e0! b+@e: ed93= [? g1f+ z] ed91= [? g0!f+ z] f ]]
+
+	c1b+@c:
+]
+
+0
