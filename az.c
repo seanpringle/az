@@ -11,6 +11,8 @@
 typedef int cell;
 #define FORMAT "%d"
 
+char *source_base;
+
 char*
 scan(char *source, char open, char close)
 {
@@ -32,7 +34,7 @@ interpret(char *source, cell *outer)
 	current = inner, previous = inner;
 
 	FILE *input = stdin; int depth = 0, done = 0, mem = 26;
-	char *base = source, *buffer, *from, *branches[4];
+	char *buffer, *from, *branches[8];
 
 	while (!done && source && *source)
 	{
@@ -44,7 +46,7 @@ interpret(char *source, cell *outer)
 				break;
 
 			case '{':
-				*current = source - base;
+				*current = source - source_base;
 				source = scan(source, '{', '}');
 				break;
 
@@ -53,7 +55,7 @@ interpret(char *source, cell *outer)
 				break;
 
 			case '[':
-				assert(depth < 4);
+				assert(depth < sizeof(branches) / sizeof(char*));
 				branches[depth++] = source;
 				break;
 
@@ -122,7 +124,7 @@ interpret(char *source, cell *outer)
 				break;
 
 			case '@':
-				assert(*current > 0);
+				assert(*current >= 0);
 				if (*current > mem)
 				{
 					assert((inner = realloc(inner, *current * sizeof(cell))));
@@ -132,21 +134,31 @@ interpret(char *source, cell *outer)
 				current = &inner[*current];
 				break;
 
+			case '\\':
+				if (*current < *previous)
+				{
+					*current  = *current ^ *previous;
+					*previous = *current ^ *previous;
+					*current  = *current ^ *previous;
+				}
+				break;
+
 			case '#': printf(FORMAT, *current);                  break;
-			case ';': interpret(base + *current, inner);         break;
+			case ';': interpret(source_base + *current, inner);  break;
 			case ':': *current = *previous;                      break;
 			case '+': *current += *previous;                     break;
-			case '-': *current = *previous - *current;           break;
-			case '*': *current *= *previous;                     break;
-			case '/': *current = *previous / *current;           break;
-			case '%': *current = *previous % *current;           break;
+			case '-': *current *= -1;                            break;
+			case '~': *current = ~*current;                      break;
+			case '<': *current = *previous << *current;          break;
+			case '>': *current = *previous >> *current;          break;
 			case '&': *current &= *previous;                     break;
 			case '|': *current |= *previous;                     break;
 			case '^': *current ^= *previous;                     break;
 			case '=': *current = *previous == *current ? -1:0;   break;
 			case '!': *current = *current == 0 ? -1:0;           break;
-			case '<': *current = MIN(*current, *previous);       break;
-			case '>': *current = MAX(*current, *previous);       break;
+			case '*': *current *= *previous;                     break;
+			case '/': *current = *previous / *current;           break;
+			case '%': *current = *previous % *current;           break;
 
 			default:
 
@@ -198,6 +210,7 @@ main (int argc, char *argv[])
 			source[len] = 0;
 			fclose(script);
 		}
+		source_base = source;
 		rc = interpret(source, globals);
 	}
 	else
@@ -207,6 +220,7 @@ main (int argc, char *argv[])
 			printf("> ");
 			if (!fgets(source, 1024, stdin))
 				break;
+			source_base = source;
 			printf(FORMAT "\n", interpret(source, globals));
 		}
 	}

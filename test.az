@@ -1,16 +1,16 @@
 ( Test Suite )
 
 a"Hello World".10.
-a"counted loop: ". a10 [? # b: a1- ] 10.
+a"counted loop: ". a0 [ b10=! ? b1a#+ ] 10.
 a"swap variables: ". x 1 y 2 x#y# yx^y^x^ x#y# 10.
 a"variable substitution: ". b42 c"world" a{ "hello $C #B". }; 10.
 a"shell integration: ".10. "ls" $[,?.]
-a"character indexing: ". c"abc" a256/ b255& . 10.
+a"character indexing: ". c"abc" a8> b255& . 10.
 
 a"function call: ".
-a{ "hello ".B. 10. } b"tom" a; b"dick" a; b"harry" a;
+a{ "hello ".B. a10. } b"tom" a; b"dick" a; b"harry" a;
 
-a"fibonacci sequence: ". a0 b1 [ ab #c32.: ac+ ba: cb: d100c<d=! ?] 10.
+a"fibonacci sequence: ". a0 b1 [ ab #c32.: ac+ ba: cb: cd100\ dc100= ?] 10.
 
 a"factorial 5: ". a1 b5 [ ba* c0!b+ ?] a# 10.
 
