@@ -123,7 +123,7 @@ interpret(char *source, cell *outer)
 				fflush(stdout);
 				break;
 
-			case '@':
+			case '\'':
 				assert(*current >= 0);
 				if (*current > mem)
 				{
@@ -132,6 +132,11 @@ interpret(char *source, cell *outer)
 					mem = *current;
 				}
 				current = &inner[*current];
+				break;
+
+			case '`':
+				assert(*current >= 0);
+				current = &outer[*current];
 				break;
 
 			case '\\':
