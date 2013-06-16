@@ -13,6 +13,24 @@ typedef int cell;
 
 char *source_base;
 
+#define NAMES 32
+char *keys[NAMES];
+cell values[NAMES];
+
+int
+find(char *name)
+{
+	int i;
+	for (i = 0; keys[i] && i < NAMES; i++)
+	{
+		if (!strcmp(keys[i], name))
+			return i;
+	}
+	assert(i < NAMES);
+	keys[i] = strdup(name);
+	return i;
+}
+
 char*
 scan(char *source, char open, char close)
 {
@@ -34,7 +52,7 @@ interpret(char *source, cell *outer)
 	current = inner, previous = inner;
 
 	FILE *input = stdin; int depth = 0, done = 0, mem = 26;
-	char *buffer, *from, *branches[8];
+	char pad[32], *buffer, *from, *branches[8];
 
 	while (!done && source && *source)
 	{
@@ -170,6 +188,17 @@ interpret(char *source, cell *outer)
 				if (isdigit(c))
 				{
 					*current = strtol(source-1, &source, 10);
+					break;
+				}
+				if (isalpha(c) && isalpha(*source) && isalpha(source[1]))
+				{
+					buffer = pad;
+					*buffer++ = c;
+					while (isalpha(*source))
+						*buffer++ = *source++;
+					*buffer = 0;
+					previous = current;
+					current  = &values[find(pad)];
 					break;
 				}
 				if (islower(c))

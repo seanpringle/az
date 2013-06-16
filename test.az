@@ -14,4 +14,6 @@ a"fibonacci sequence: ". a0 b1 [ ab #c32.: ac+ ba: cb: cd100\ dc100= ?] 10.
 
 a"factorial 5: ". a1 b5 [ ba* c0!b+ ?] a# 10.
 
+a"global named variables: ". alpha 42 b1 alpha+ #
+
 0
