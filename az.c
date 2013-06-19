@@ -51,7 +51,7 @@ interpret(char *source, cell *outer)
 	assert((inner = calloc(26, sizeof(cell))));
 	current = inner, previous = inner;
 
-	FILE *input = stdin; int depth = 0, done = 0, mem = 26;
+	FILE *input = stdin; int depth = 0, done = 0, mem = 26, temp;
 	char pad[32], *buffer, *from, *branches[8];
 
 	while (!done && source && *source)
@@ -143,13 +143,15 @@ interpret(char *source, cell *outer)
 
 			case '\'':
 				assert(*current >= 0);
-				if (*current > mem)
+				temp = *current;
+				if (temp > mem)
 				{
-					assert((inner = realloc(inner, *current * sizeof(cell))));
-					memset(inner + mem, 0, (*current - mem) * sizeof(cell));
-					mem = *current;
+					assert((inner = realloc(inner, (temp+1) * sizeof(cell))));
+					memset(inner + mem, 0, ((temp+1) - mem) * sizeof(cell));
+					mem = temp;
+					previous = &inner[0];
 				}
-				current = &inner[*current];
+				current = &inner[temp];
 				break;
 
 			case '`':
