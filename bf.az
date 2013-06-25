@@ -1,8 +1,8 @@
 ( 64k source, 64k tape )
-a32768'
+a32768@
 
 ( read source to cell 26 )
-a26 [ b,? a': c1a+ ]
+a26 [ b,? a@: c1a+ ]
 
 ( tape pointer )
 a16384
@@ -13,16 +13,16 @@ b26
 x { EG= [? a1F+ z] EH= [? a0!F+ z] }
 
 [
-	b'c: ? (c = command)
+	b@c: ? (c = command)
 
 	c (>) d62 = [? 1a+   z]
 	c (<) d60 = [? 0!a+  z]
-	c (+) d43 = [? 1a'+  z]
-	c (-) d45 = [? 0!a'+ z]
-	c (.) d46 = [? a'.   z]
-	c (,) d44 = [? a',   z]
-	c ([) d91 = [? f1 a'd:! [? e1  b+'e: g91 h93 x; f ]]
-	c (]) d93 = [? f1 a'd:  [? e0! b+'e: g93 h91 x; f ]]
+	c (+) d43 = [? 1a@+  z]
+	c (-) d45 = [? 0!a@+ z]
+	c (.) d46 = [? a@.   z]
+	c (,) d44 = [? a@,   z]
+	c ([) d91 = [? f1 a@d:! [? e1  b+@e: g91 h93 x; f ]]
+	c (]) d93 = [? f1 a@d:  [? e0! b+@e: g93 h91 x; f ]]
 
 	c1b+
 ]
