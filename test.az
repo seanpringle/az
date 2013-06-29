@@ -3,7 +3,7 @@
 a"Hello World".10.
 a"counted loop: ". a0 [ b10=! ? b1a#+ ] 10.
 a"swap variables: ". x 1 y 2 x#y# yx^y^x^ x#y# 10.
-a"variable substitution: ". b42 c"world" a{ "hello $C #B". }; 10.
+a"variable substitution: ". b42 c"world" a{ "hello $C #B". }; a10.
 a"shell integration: ".10. "ls" $[,?.]
 a"character indexing: ". c"abc" a8> b255& . 10.
 
@@ -14,6 +14,14 @@ a"fibonacci sequence: ". a0 b1 [ ab #c32.: ac+ ba: cb: cd100\ dc100= ?] 10.
 
 a"factorial 5: ". a1 b5 [ ba* c0!b+ ?] a# 10.
 
-a"global named variables: ". alpha 42 beta 1 alpha+ #
+a"global named variables: ". alpha 42 beta 1 alpha+ # 10.
+
+a"jump table: ".
+
+yesno { a { A"yes" } b { A"no" } An: !-@; . }
+a1 yesno; a0 yesno; a10.
+
+invert { ~ b0! ~^ } a1 # invert; #
+invert { \ b0! \^ } a1 # invert; #
 
 0

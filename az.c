@@ -33,7 +33,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define FORMAT "%d"
 #define AZ 26
-#define MARKS AZ
+#define MARKS 1024
 #define CHAINS AZ
 #define NAME AZ
 #define BLOCK 1024
@@ -72,12 +72,12 @@ typedef struct _Name {
 
 char *sourcecode;
 Name *names[CHAINS];
-char *marks[MARKS];
-int  marked;
 cell globals[AZ];
 cell *current, *previous;
 FILE *input;
 char *buffer;
+char *marks[MARKS];
+int marked = 0;
 
 // find or create a global named variable
 
@@ -136,7 +136,8 @@ input_stdin()
 cell
 interpret(char *source, cell *outer)
 {
-	cell *inner, working, done = 0, mem = AZ; char c;
+	cell *inner, working, done = 0, mem = AZ;
+	char c; int markers = marked;
 	assert((inner = calloc(mem, CELL)), ERR_MEMORY);
 
 	while (!done && source && (c = *source++)) switch (c)
@@ -160,8 +161,11 @@ interpret(char *source, cell *outer)
 			break;
 
 		case '?': // conditional break function/loop
-			if (!*current && !(done = !marked))
+			if (!*current && !(done = (marked == markers)))
+			{
 				source = scan(source, '[', ']');
+				marked--;
+			}
 			break;
 
 		case ']': // end of loop
@@ -236,11 +240,16 @@ interpret(char *source, cell *outer)
 			interpret(sourcecode + *current, inner);
 			break;
 
+		case '~':
+			current  = (cell*)((uint64_t)current ^ (uint64_t)previous);
+			previous = (cell*)((uint64_t)current ^ (uint64_t)previous);
+			current  = (cell*)((uint64_t)current ^ (uint64_t)previous);
+			break;
+
 		case '#': printf(FORMAT, *current);                break;
 		case ':': *current = *previous;                    break;
 		case '+': *current += *previous;                   break;
 		case '-': *current *= -1;                          break;
-		case '~': *current = ~*current;                    break;
 		case '<': *current = *previous << *current;        break;
 		case '>': *current = *previous >> *current;        break;
 		case '&': *current &= *previous;                   break;
