@@ -227,39 +227,20 @@ interpret(char *source, cell *outer)
 			current = &inner[working];
 			break;
 
-		case '\\': // numerically sort current and previous
-			if (*current < *previous)
-			{
-				*current  = *current ^ *previous;
-				*previous = *current ^ *previous;
-				*current  = *current ^ *previous;
-			}
-			break;
-
 		case ';': // call a function
 			interpret(sourcecode + *current, inner);
 			break;
 
-		case '~':
-			current  = (cell*)((uint64_t)current ^ (uint64_t)previous);
-			previous = (cell*)((uint64_t)current ^ (uint64_t)previous);
-			current  = (cell*)((uint64_t)current ^ (uint64_t)previous);
-			break;
-
-		case '#': printf(FORMAT, *current);                break;
-		case ':': *current = *previous;                    break;
-		case '+': *current += *previous;                   break;
-		case '-': *current *= -1;                          break;
-		case '<': *current = *previous << *current;        break;
-		case '>': *current = *previous >> *current;        break;
-		case '&': *current &= *previous;                   break;
-		case '|': *current |= *previous;                   break;
-		case '^': *current ^= *previous;                   break;
-		case '=': *current = *previous == *current ? -1:0; break;
-		case '!': *current = *current == 0 ? -1:0;         break;
-		case '*': *current *= *previous;                   break;
-		case '/': *current = *previous / *current;         break;
-		case '%': *current = *previous % *current;         break;
+		case '#': printf(FORMAT, *current);         break;
+		case '+': *current += *previous;            break;
+		case '-': *current *= -1;                   break;
+		case '<': *current = *previous << *current; break;
+		case '>': *current = *previous >> *current; break;
+		case '&': *current &= *previous;            break;
+		case '|': *current |= *previous;            break;
+		case '^': *current ^= *previous;            break;
+		case '!': *current = *current == 0 ? -1:0;  break;
+		case '\\': *current = *current < 0 ? -1:0;   break;
 
 		default:
 
