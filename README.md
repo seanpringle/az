@@ -1,6 +1,4 @@
 az
 ==
 
-an esolang!
-
-[see here](http://aerosuidae.net/az)
+an [esolang](https://esolangs.org/wiki/Az)!
